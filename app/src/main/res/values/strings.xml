@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CuCo</string>
+    <string name="detected_price">Detected Price: </string>
+    <string name="converted_price">Converted Price: </string>
+</resources>
