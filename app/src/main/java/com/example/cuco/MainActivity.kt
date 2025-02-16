@@ -1,4 +1,4 @@
-package com.example.cuco
+package com.example.cuco  // Ellenőrizd, hogy ez megegyezik az AndroidManifest.xml-ben lévő csomagnévvel!
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
