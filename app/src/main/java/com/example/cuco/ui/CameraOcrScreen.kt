@@ -1,29 +1,30 @@
-package com.example.currencylensapp.ui
+package com.example.cuco
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import com.example.currencylensapp.ui.CameraPreview
+import com.example.cuco.ui.CameraPreview
 
 @Composable
 fun CameraOcrScreen() {
-    // Ebbe tároljuk a legutóbb felismert árakat
+    // This holds the recognized & converted results
     var detectedPrices by remember { mutableStateOf<List<String>>(emptyList()) }
 
     Column {
-        // 1) Kamera preview (ami a valós idejű OCR eredményeket callbackben adja vissza)
+        // 1) Camera preview which calls back with recognized prices
         CameraPreview(
             onPricesDetected = { newPrices ->
+                // Each frame may bring a new list of recognized items
                 detectedPrices = newPrices
             }
         )
 
-        // 2) Listázzuk a talált árakat
+        // 2) List them
         LazyColumn {
-            items(detectedPrices) { price ->
-                Text(text = price)
+            items(detectedPrices) { priceString ->
+                Text(text = priceString)
             }
         }
     }
