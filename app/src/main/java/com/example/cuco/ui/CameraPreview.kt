@@ -1,4 +1,4 @@
-package com.example.currencylensapp.ui
+package com.example.cuco.ui
 
 import android.util.Log
 import androidx.camera.core.CameraSelector
@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.example.currencylensapp.util.CurrencyParser // ha a parser is ott van
+import com.example.cuco.util.CurrencyParser
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -23,44 +23,41 @@ fun CameraPreview(
 
     AndroidView(factory = { ctx ->
         val previewView = PreviewView(ctx)
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
 
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
-            // 1) Preview (látható kamerakép)
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
 
-            // 2) ImageAnalysis (frame-ek elemzése)
             val imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
-            // ML Kit text recognizer
             val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-            // Analyzer callback
             imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(ctx)) { imageProxy ->
                 val mediaImage = imageProxy.image
                 if (mediaImage != null) {
                     val rotation = imageProxy.imageInfo.rotationDegrees
                     val inputImage = InputImage.fromMediaImage(mediaImage, rotation)
-
+                    
                     textRecognizer.process(inputImage)
                         .addOnSuccessListener { visionText ->
-                            val fullText = visionText.text
-                            // Kinyerjük a talált árakat
-                            val prices = CurrencyParser.findPrices(fullText)
-                            // Visszaadjuk a felső rétegnek
-                            onPricesDetected(prices)
+                            val recognizedText = visionText.text
+                            // Convert recognized text with the parser
+                            // (which internally calls the exchange rate if needed)
+                            CurrencyParser.parsePrices(recognizedText) { prices ->
+                                // This is an async callback from parsePrices
+                                onPricesDetected(prices)
+                            }
                         }
                         .addOnFailureListener { e ->
                             Log.e("CameraPreview", "OCR error", e)
                         }
                         .addOnCompleteListener {
-                            // Fontos: zárjuk le az ImageProxy-t
                             imageProxy.close()
                         }
                 } else {
@@ -68,11 +65,9 @@ fun CameraPreview(
                 }
             }
 
-            // 3) Kiválasztjuk a hátsó kamerát
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
-                // Bind
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     (ctx as androidx.activity.ComponentActivity),
@@ -83,6 +78,7 @@ fun CameraPreview(
             } catch (exc: Exception) {
                 Log.e("CameraPreview", "Camera bind failed", exc)
             }
+
         }, ContextCompat.getMainExecutor(ctx))
 
         previewView
