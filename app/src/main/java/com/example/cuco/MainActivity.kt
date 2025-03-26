@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1) Kameraengedély kérés, ha nincs még meg
+        // Ask for camera permission if not granted
         if (!isCameraPermissionGranted()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -25,10 +25,10 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        // 2) Compose felület
+        // Launch Compose UI
         setContent {
             MaterialTheme {
-                // Meghívjuk a fő képernyőt
+                // Main Screen
                 CameraOcrScreen()
             }
         }
@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    // Ha a user most adta vagy tagadta meg az engedélyt
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -50,9 +49,9 @@ class MainActivity : ComponentActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Engedélyezve
+                // Granted
             } else {
-                // Elutasítva – UI-ban vagy snackbarral jelezheted
+                // Denied
             }
         }
     }
