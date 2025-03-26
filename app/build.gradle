@@ -1,15 +1,14 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    // Ha Compose-projekt sablonból indultál, lehet itt még pl. "kotlin-compose"
 }
 
 android {
-    namespace = "com.example.currencylensapp"
+    namespace = "com.example.cuco"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.currencylensapp"
+        applicationId = "com.example.cuco"
         minSdk = 21
         targetSdk = 33
         versionCode = 1
@@ -20,33 +19,31 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7" // Példa: ellenőrizd a Compose verziókat
+        kotlinCompilerExtensionVersion = "1.4.7" // check current version
     }
 }
 
 dependencies {
-    // ===== Compose alap
+    // Compose basics
     val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    // stb. (ha több Compose modul kell)
 
-    // ===== CameraX
+    // CameraX
     val cameraXVersion = "1.2.2"
     implementation("androidx.camera:camera-core:$cameraXVersion")
     implementation("androidx.camera:camera-camera2:$cameraXVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraXVersion")
-    implementation("androidx.camera:camera-view:$cameraXVersion") // (ha kell a PreviewView)
+    implementation("androidx.camera:camera-view:$cameraXVersion")
 
-    // ===== ML Kit text recognition
+    // ML Kit text recognition
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
-    // (Opcionális) Gson, ha API-hívásból parse-olsz JSON-t
+    // JSON + Networking
     implementation("com.google.code.gson:gson:2.10")
-
-    // ===== Compose test/futtatás
-    androidTestImplementation(composeBom)
-    // ... (tesztek, nem mindig kell)
+    // For HTTP requests (OkHttp or Retrofit), pick one:
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
