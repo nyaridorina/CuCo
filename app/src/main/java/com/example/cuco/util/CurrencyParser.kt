@@ -15,7 +15,7 @@ object CurrencyParser {
     
     // Your ExchangeRateApi base URL (example)
     private const val BASE_URL = "https://v6.exchangerate-api.com/v6/"
-    private const val API_KEY = "YOUR_EXCHANGE_RATE_API_KEY" // put your real key here
+    private const val API_KEY = "feec8b7611be09b0cad59a2b" // put your real key here
 
     // Retrofit instance
     private val retrofit = Retrofit.Builder()
