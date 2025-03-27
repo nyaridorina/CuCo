@@ -1,8 +1,32 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration
+local.properties
+
+# IDE config
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea
+
+# OS-specific files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+Thumbs.db
+
+# Kotlin/Java
+*.class
+*.jar
+*.war
+*.log
+
+# Android
+captures/
+*.apk
+*.ap_
+
+# Optional: Jetpack Compose previews
+.android/
+
+# Other
+*.keystore
